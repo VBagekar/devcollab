@@ -37,10 +37,10 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index({ email: 1 }, { unique: true })
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('passwordHash')) return next()
-  this.passwordHash = await bcrypt.hash(this.passwordHash, 10)
-  next()
+userSchema.pre('save', async function () {
+  if (!this.isModified('passwordHash')) return
+  const salt = await bcrypt.genSalt(10)
+  this.passwordHash = await bcrypt.hash(this.passwordHash, salt)
 })
 
 userSchema.methods.comparePassword = async function (candidatePassword) {

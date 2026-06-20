@@ -16,6 +16,11 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
 app.use('/api/auth', authRoutes)
+const { protect } = require('./middleware/auth.middleware')
+
+app.get('/api/test-protected', protect, (req, res) => {
+  res.json({ success: true, message: `Hello ${req.user.email}` })
+})
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })

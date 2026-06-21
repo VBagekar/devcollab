@@ -1,0 +1,11 @@
+{
+  "name": "devcollab",
+  "version": "1.0.0",
+  "scripts": {
+    "lint": "eslint server/src/**/*.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.5.0"
+  }
+}

@@ -1,88 +1,49 @@
 const mongoose = require('mongoose')
 
-const commentSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
-    text: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: [1000, 'Comment cannot exceed 1000 characters']
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-  },
-  { _id: true }
-)
-
-const taskSchema = new mongoose.Schema(
+const activityLogSchema = new mongoose.Schema(
   {
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Project',
       required: true
     },
-    title: {
-      type: String,
-      required: [true, 'Task title is required'],
-      trim: true,
-      maxlength: [200, 'Title cannot exceed 200 characters']
-    },
-    description: {
-      type: String,
-      trim: true,
-      maxlength: [2000, 'Description cannot exceed 2000 characters'],
-      default: ''
-    },
-    status: {
-      type: String,
-      enum: ['todo', 'in_progress', 'done'],
-      default: 'todo'
-    },
-    priority: {
-      type: String,
-      enum: ['low', 'medium', 'high'],
-      default: 'medium'
-    },
-    assigneeId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      default: null
-    },
-    createdBy: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
     },
-    dueDate: {
-      type: Date,
-      default: null
+    action: {
+      type: String,
+      enum: [
+        'task:created',
+        'task:updated',
+        'task:moved',
+        'task:assigned',
+        'task:deleted',
+        'task:commented',
+        'member:invited',
+        'member:removed',
+        'member:role_changed'
+      ],
+      required: true
     },
-    comments: {
-      type: [commentSchema],
-      default: []
+    metadata: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
     },
-    completedAt: {
+    createdAt: {
       type: Date,
-      default: null
+      default: Date.now
     }
-  },
-  {
-    timestamps: true
   }
 )
 
-taskSchema.index({ projectId: 1 })
-taskSchema.index({ projectId: 1, status: 1 })
-taskSchema.index({ assigneeId: 1 })
-taskSchema.index({ projectId: 1, completedAt: 1 })
+activityLogSchema.index({ projectId: 1, createdAt: -1 })
+activityLogSchema.index(
+  { createdAt: 1 },
+  { expireAfterSeconds: 7776000 }
+)
 
-const Task = mongoose.model('Task', taskSchema)
+const ActivityLog = mongoose.models.ActivityLog || mongoose.model('ActivityLog', activityLogSchema)
 
-module.exports = Task
+module.exports = ActivityLog

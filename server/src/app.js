@@ -4,6 +4,8 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const authRoutes = require('./routes/auth.routes')
+const projectRoutes = require('./routes/project.routes')
+const { protect } = require('./middleware/auth.middleware')
 
 const app = express()
 
@@ -15,8 +17,9 @@ app.use(cors({
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
+
 app.use('/api/auth', authRoutes)
-const { protect } = require('./middleware/auth.middleware')
+app.use('/api/projects', projectRoutes)
 
 app.get('/api/test-protected', protect, (req, res) => {
   res.json({ success: true, message: `Hello ${req.user.email}` })

@@ -3,6 +3,7 @@ import useAuthStore from './stores/authStore'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import ProjectBoard from './pages/ProjectBoard'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -14,14 +15,8 @@ function App() {
         <Route path="/" element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/projects/:id" element={<ProtectedRoute><ProjectBoard /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

@@ -33,19 +33,20 @@ export default function TaskDrawer({ task, projectId, onClose, onUpdate }) {
   }, [onClose])
 
   const handleSave = async () => {
-    try {
-      setSaving(true)
-      const res = await api.put(
-        `/api/projects/${projectId}/tasks/${task._id}`,
-        form
-      )
-      onUpdate(res.data.data.task)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setSaving(false)
-    }
+  try {
+    setSaving(true)
+    const res = await api.put(
+      `/api/projects/${projectId}/tasks/${task._id}`,
+      form
+    )
+    onUpdate(res.data.data.task)
+    onClose()
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setSaving(false)
   }
+}
 
   const handleAddComment = async () => {
     if (!comment.trim()) return

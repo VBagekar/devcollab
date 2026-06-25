@@ -28,19 +28,19 @@ export default function ProjectBoard() {
   }, [id])
 
   const fetchData = async () => {
-    try {
-      const [projectRes, tasksRes] = await Promise.all([
-        api.get(`/api/projects/${id}`),
-        api.get(`/api/projects/${id}/tasks`),
-      ])
-      setProject(projectRes.data.data.project)
-      setTasks(tasksRes.data.data.tasks)
-    } catch {
-      navigate('/dashboard')
-    } finally {
-      setLoading(false)
-    }
+  try {
+    const [projectRes, tasksRes] = await Promise.all([
+      api.get(`/api/projects/${id}`),
+      api.get(`/api/projects/${id}/tasks`),
+    ])
+    setProject(projectRes.data.data.project)
+    setTasks(tasksRes.data.data.tasks)
+  } catch {
+    navigate('/dashboard')
+  } finally {
+    setLoading(false)
   }
+}
 
   const getTasksByStatus = (status) => {
     return tasks.filter((t) => t.status === status)
@@ -84,7 +84,7 @@ export default function ProjectBoard() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="pt-14">
+      <div className="flex flex-col" style={{ paddingTop: '56px' }}>
         <div className="border-b border-gray-200 bg-white px-6 py-4">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
             <div className="flex items-center gap-3">

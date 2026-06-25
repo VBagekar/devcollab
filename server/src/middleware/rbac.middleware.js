@@ -15,6 +15,9 @@ const requireRole = (...roles) => {
 
       const role = project.getMemberRole(req.user.userId)
 
+      console.log('Token userId:', req.user.userId)
+      console.log('Project members:', JSON.stringify(project.members))
+
       if (!role) {
         return res.status(403).json({
           success: false,

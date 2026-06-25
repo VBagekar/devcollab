@@ -52,16 +52,20 @@ const projectSchema = new mongoose.Schema(
 projectSchema.index({ 'members.userId': 1 })
 
 projectSchema.methods.getMemberRole = function (userId) {
-  const member = this.members.find(
-    (m) => m.userId.toString() === userId.toString()
-  )
+  const idStr = userId.toString()
+  const member = this.members.find((m) => {
+    const memberId = m.userId?._id || m.userId
+    return memberId.toString() === idStr
+  })
   return member ? member.role : null
 }
 
 projectSchema.methods.isMember = function (userId) {
-  return this.members.some(
-    (m) => m.userId.toString() === userId.toString()
-  )
+  const idStr = userId.toString()
+  return this.members.some((m) => {
+    const memberId = m.userId?._id || m.userId
+    return memberId.toString() === idStr
+  })
 }
 
 const Project = mongoose.models.Project || mongoose.model('Project', projectSchema)
